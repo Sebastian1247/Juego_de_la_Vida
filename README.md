@@ -64,3 +64,4 @@ Durante la simulación, se presiona Enter para avanzar a la siguiente generació
 - Roberto Carlos Saucedo Rodriguez — [RobertoCSR2003](https://github.com/RobertoCSR2003) / [RobertoCR2003](https://github.com/RobertoCR2003)
 
 Tecnologías de Programación, Maestría en Ciencias de la Computación (1er semestre)
+[Tecnológico Nacional de México, Campus Culiacán](https://www.culiacan.tecnm.mx/posgrados/maestria-en-ciencias-de-la-computacion/)
