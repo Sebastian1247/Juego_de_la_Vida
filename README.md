@@ -57,3 +57,10 @@ Durante la simulación, se presiona Enter para avanzar a la siguiente generació
 | `Movimiento` | Representa el cambio de estado de una celda en una generación específica. |
 | `HistorialMovimientos` | Guarda y muestra la lista de todos los movimientos ocurridos durante el juego. |
 | `Keyboard` | Utilería para leer datos desde la consola. |
+
+## Autores
+
+- Sebastian Verdugo Bermudez — [Sebastian1247](https://github.com/Sebastian1247)
+- Roberto Carlos Saucedo Rodriguez — [RobertoCSR2003](https://github.com/RobertoCSR2003) / [RobertoCR2003](https://github.com/RobertoCR2003)
+
+Tecnologías de Programación, Maestría en Ciencias de la Computación (1er semestre)
