@@ -1,0 +1,9 @@
+# Compilados de Java
+bin/
+*.class
+
+# Archivo temporal que genera la extension Code Runner de VSCode
+tempCodeRunnerFile.java
+
+# Enunciado de la tarea (material del curso, no se sube al repo)
+1 proyecto TP MCC 2026  juego de la vida (usando arreglos).pdf
