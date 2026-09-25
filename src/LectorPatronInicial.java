@@ -10,39 +10,30 @@ public class LectorPatronInicial {
 
     private String mensajeError;
 
-    // metodo que devuelva las coordenadas ya parseadas, cuando esValido() dio true recibiendo numero de filas y columnas del tablero
+    // metodo que devuelva las coordenadas ya parseadas, cuando validar() dio true recibiendo numero de filas y columnas del tablero
     public List<Integer> procesarDatosTablero(String datosIniciales, int numeroFilas, int numeroColumnas){
-        String[] datosTablero;
-        if (datosIniciales != null) {
-            datosTablero = datosIniciales.split(",");
-        } else {
-            datosTablero = new String[0];
-        }
-
-        if(validar(datosIniciales, datosTablero, numeroFilas, numeroColumnas)){
-            List<Integer> datosProcesados = new ArrayList<>();
-
-            for (int i = 1;i < datosTablero.length; i++){
-                datosProcesados.add(Integer.parseInt(datosTablero[i]));
+        List<Integer> datosProcesados = new ArrayList<>();
+        if (datosIniciales == null || datosIniciales.isEmpty()) {
+            mensajeError = "El texto recibido es nulo o vacio";
+        } 
+        else{
+            // Con -1 como segundo parametro, split conserva los vacios del final (ej. "1,2,3,")
+            String[] datosTablero = datosIniciales.split(",", -1);
+            if(validar(datosTablero, numeroFilas, numeroColumnas)){
+                for (int i = 1;i < datosTablero.length; i++){
+                    datosProcesados.add(Integer.parseInt(datosTablero[i]));
+                }
             }
-            return datosProcesados; //CORREGIR?
         }
-        return null;
+        return datosProcesados;
     }
 
     //Valida el string completo (usa split, recorre pares, etc.)
-    private boolean validar(String datosIniciales, String[] datosTablero, int numeroFilas, int numeroColumnas) {
-        //Validar que la cadena no sea nula o vacia
-        //CORREGIR LOS MENSAJES DE ERROR PARA QUE SEAN MAS CLAROS y solo regresar un boolean con banderas como dijo daniel
+    private boolean validar(String[] datosTablero, int numeroFilas, int numeroColumnas) {
         boolean esValido = true;
-        if (datosIniciales == null || datosIniciales.isEmpty()){
-            mensajeError = "El texto recibido era nulo o vacio";
-            esValido = false;
-        }
-
         //Validar que la primera posicion sea un entero
-        else if (!esEnteroNoNegativo(datosTablero[0])) {
-            mensajeError = "El texto recibido no tenia un numero como primer parametro";
+        if (!esEnteroNoNegativo(datosTablero[0])) {
+            mensajeError = "El texto recibido no tiene numero como primer parametro";
             esValido = false;
         }
         else{
@@ -60,17 +51,17 @@ public class LectorPatronInicial {
             }
             //Validar que las coordenadas vengan en pares (fila y columna)
             else if ((numeroElementos - 1) % 2 != 0){
-                mensajeError = "El texto recibido tiene un numero impar de pares de coordenadas";
+                mensajeError = "El texto recibido tiene un numero impar de coordenadas";
                 esValido = false;
             }
             //Validar que el numero de organismos declarado coincida con los pares recibidos
             else if (numeroOrganismos != (numeroElementos - 1) / 2){
-                mensajeError = "El numero de organismos no coincide con la cantidad de pares de coordenadas recibidas";
+                mensajeError = "El numero de organismos no coincide con la cantidad de coordenadas recibidas";
                 esValido = false;
             }
             //Validar que los organismos no superen el 50% de la capacidad del tablero
             else if ((numeroElementos - 1) / 2 > (numeroFilas * numeroColumnas) / 2){
-                mensajeError = "El texto recibido tiene más pares de coordenadas que el 50% de la capacidad del tablero";
+                mensajeError = "El texto recibido tiene más coordenadas que el 50% de la capacidad del tablero";
                 esValido = false;
             }
             else{
@@ -91,12 +82,12 @@ public class LectorPatronInicial {
                         int columna = Integer.parseInt(datosTablero[i + 1]);
                         //Validar que los datos ingresados esten dentro del rango del tablero
                         if (fila < 0 || fila >= numeroFilas || columna < 0 || columna >= numeroColumnas) {
-                            mensajeError = "Existen posiciones fuera de rango en el texto en la posicion de los pares: "+i;
+                            mensajeError = "Existen posiciones fuera de rango en el texto en la posicion de las coordenadas: "+i;
                             esValido = false;
                         }
                         //Validar que la posicion no se haya usado ya por otro organismo
                         else if(posicionesUsadas[fila][columna]){
-                            mensajeError = "La posición (" + fila + "," + columna + ") está repetida";
+                            mensajeError = "La coordenada (" + fila + "," + columna + ") está repetida";
                             esValido = false;
                         }
                         else{

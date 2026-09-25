@@ -51,7 +51,7 @@ public class Tablero {
     public boolean iniciar(String datosIniciales, int generaciones){
         boolean esCadenaValida = true;
         List<Integer> coordenadas = lectorPatronInicial.procesarDatosTablero(datosIniciales, numeroFilas, numeroColumnas);
-        if (coordenadas == null){
+        if (coordenadas.isEmpty()){
             esCadenaValida = false;
             System.out.println(lectorPatronInicial.getMensajeError());
         }
@@ -153,16 +153,17 @@ public class Tablero {
     // muere por soledad (<2) o sobrepoblacion (>3); una celda muerta nace
     // solo si tiene exactamente 3 vecinos vivos
     private EstadoOrganismo calcularSiguienteEstado(EstadoOrganismo estadoActual, int vecinosVivos){
+        EstadoOrganismo siguienteEstado = EstadoOrganismo.MUERTO;
         if (estadoActual == EstadoOrganismo.VIVO){
             if (vecinosVivos < 2 || vecinosVivos > 3){
-                return EstadoOrganismo.MUERTO;
+                siguienteEstado = EstadoOrganismo.MUERTO;
             }
-            return EstadoOrganismo.VIVO;
+            siguienteEstado = EstadoOrganismo.VIVO;
         }
-        if (vecinosVivos == 3){
-            return EstadoOrganismo.VIVO;
+        else if (vecinosVivos == 3){
+            siguienteEstado = EstadoOrganismo.VIVO;
         }
-        return EstadoOrganismo.MUERTO;
+        return siguienteEstado;
     }
 
     // Arma la fila con los numeros de columna. Se llama una sola vez desde
