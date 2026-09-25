@@ -1,10 +1,11 @@
 import java.util.ArrayList;
+import java.util.List;
 
 // Guarda y muestra la lista de todos los movimientos (cambios de estado
 // de una celda) que ocurren a lo largo del juego
 public class HistorialMovimientos {
 
-    private ArrayList<Movimiento> movimientos;
+    private List<Movimiento> movimientos;
 
     public HistorialMovimientos(){
         movimientos = new ArrayList<>();
@@ -17,7 +18,7 @@ public class HistorialMovimientos {
     public void imprimirMovimientos() {
         System.out.println("Listado de movimientos realizados:");
         int generacionAnterior = -1;
-
+        //Esto podria corregirse aunque no fue indicado
         for (Movimiento m : movimientos) {
             if (m.getNumeroGeneracion() != generacionAnterior) {
                 System.out.println();
@@ -31,7 +32,7 @@ public class HistorialMovimientos {
         }
     }
 
-    public ArrayList<Movimiento> getMovimientos() {
+    public List<Movimiento> getMovimientos() {
         return movimientos;
     }
 

@@ -8,109 +8,122 @@ import java.util.ArrayList;
  */
 public class LectorPatronInicial {
 
-    private String datosIniciales;
-    private String [] datosTablero;
     private String mensajeError;
 
-
-    public LectorPatronInicial(String datosIniciales) {
-        this.datosIniciales = datosIniciales;
-        this.datosTablero = datosIniciales.split(",");
-        mensajeError = "";
-    }
-
     // metodo que devuelva las coordenadas ya parseadas, cuando esValido() dio true recibiendo numero de filas y columnas del tablero
-    public List<Integer> procesarDatosTablero(int numeroFilas, int numeroColumnas){
-        if(validar(numeroFilas, numeroColumnas)){
+    public List<Integer> procesarDatosTablero(String datosIniciales, int numeroFilas, int numeroColumnas){
+        String[] datosTablero;
+        if (datosIniciales != null) {
+            datosTablero = datosIniciales.split(",");
+        } else {
+            datosTablero = new String[0];
+        }
+
+        if(validar(datosIniciales, datosTablero, numeroFilas, numeroColumnas)){
             List<Integer> datosProcesados = new ArrayList<>();
 
             for (int i = 1;i < datosTablero.length; i++){
                 datosProcesados.add(Integer.parseInt(datosTablero[i]));
             }
-            return datosProcesados;
+            return datosProcesados; //CORREGIR?
         }
         return null;
     }
 
     //Valida el string completo (usa split, recorre pares, etc.)
-    private boolean validar(int numeroFilas, int numeroColumnas) {
+    private boolean validar(String datosIniciales, String[] datosTablero, int numeroFilas, int numeroColumnas) {
         //Validar que la cadena no sea nula o vacia
+        //CORREGIR LOS MENSAJES DE ERROR PARA QUE SEAN MAS CLAROS y solo regresar un boolean con banderas como dijo daniel
+        boolean esValido = true;
         if (datosIniciales == null || datosIniciales.isEmpty()){
-            mensajeError = "El string recibido era nulo o vacio";
-            return false;
+            mensajeError = "El texto recibido era nulo o vacio";
+            esValido = false;
         }
 
         //Validar que la primera posicion sea un entero
-        if (!esEnteroPositivo(datosTablero[0])) {
-            mensajeError = "El string recibido tenia un string como primer parametro";
-            return false;
+        else if (!esEnteroNoNegativo(datosTablero[0])) {
+            mensajeError = "El texto recibido no tenia un numero como primer parametro";
+            esValido = false;
         }
+        else{
+            int numeroOrganismos = Integer.parseInt(datosTablero[0]);
+            int numeroElementos = datosTablero.length;
+            //Validar que la cadena tenga al menos 3 elementos (numero de organismos, fila y columna)
+            if (numeroElementos < 3){
+                mensajeError = "El texto recibido tiene menos de 3 elementos";
+                esValido = false;
+            }
+            //Validar que el numero de organismos no sea 0
+            else if (numeroOrganismos == 0){
+                mensajeError = "El numero de organismos es 0, no se puede iniciar el juego";
+                esValido = false;
+            }
+            //Validar que las coordenadas vengan en pares (fila y columna)
+            else if ((numeroElementos - 1) % 2 != 0){
+                mensajeError = "El texto recibido tiene un numero impar de pares de coordenadas";
+                esValido = false;
+            }
+            //Validar que el numero de organismos declarado coincida con los pares recibidos
+            else if (numeroOrganismos != (numeroElementos - 1) / 2){
+                mensajeError = "El numero de organismos no coincide con la cantidad de pares de coordenadas recibidas";
+                esValido = false;
+            }
+            //Validar que los organismos no superen el 50% de la capacidad del tablero
+            else if ((numeroElementos - 1) / 2 > (numeroFilas * numeroColumnas) / 2){
+                mensajeError = "El texto recibido tiene más pares de coordenadas que el 50% de la capacidad del tablero";
+                esValido = false;
+            }
+            else{
+                // Se usa para detectar si dos organismos quedan en la misma posicion
+                boolean[][] posicionesUsadas = new boolean[numeroFilas][numeroColumnas];
 
-        int numeroOrganismos = Integer.parseInt(datosTablero[0]);
-        int numeroElementos = datosTablero.length;
-        //Validar que el numero de organismos no sea 0
-        if (numeroOrganismos == 0){
-            mensajeError = "El numero de organismos es 0, no se puede iniciar el juego";
-            return false;
-        }
-        //Validar que las coordenadas vengan en pares (fila y columna)
-        if ((numeroElementos - 1) % 2 != 0){
-            mensajeError = "El string recibido tiene un numero impar de pares de coordenadas";
-            return false;
-        }
-        //Validar que el numero de organismos declarado coincida con los pares recibidos
-        if (numeroOrganismos != (numeroElementos - 1) / 2){
-            mensajeError = "El numero de organismos no coincide con la cantidad de pares de coordenadas recibidas";
-            return false;
-        }
-        //Validar que la cadena tenga al menos 3 elementos (numero de organismos, fila y columna)
-        if (numeroElementos < 3){
-            mensajeError = "El string recibido tiene menos de 3 elementos";
-            return false;
-        }
-        //Validar que los organismos no superen el 50% de la capacidad del tablero
-        if ((numeroElementos - 1) / 2 > (numeroFilas * numeroColumnas) / 2){
-            mensajeError = "El string recibido tiene mas pares de coordenadas que el 50% de la capacidad del tablero";
-            return false;
-        }
-        // Se usa para detectar si dos organismos quedan en la misma posicion
-        boolean[][] posicionesUsadas = new boolean[numeroFilas][numeroColumnas];
-        for (int i = 1; i < numeroElementos; i += 2) {
-            String par1 = datosTablero[i];
-            String par2 = datosTablero[i+1];
-            //Validar que los datos ingresados sean numeros positivos
-            if (!esEnteroPositivo(par1) || !esEnteroPositivo(par2)){
-                mensajeError = "El string recibido tiene strings como parametros en lugar de solo enteros";
-                return false;
+                // Se detiene en el primer error para que mensajeError
+                // describa ese error y no uno posterior
+                for (int i = 1; esValido && i < numeroElementos; i += 2) {
+                    String par1 = datosTablero[i];
+                    String par2 = datosTablero[i+1];
+                    //Validar que los datos ingresados sean numeros no negativos
+                    if (!esEnteroNoNegativo(par1) || !esEnteroNoNegativo(par2)){
+                        mensajeError = "El texto recibido no cuenta con unicamente numeros positivos";
+                        esValido = false;
+                    } else{
+                        int fila = Integer.parseInt(datosTablero[i]);
+                        int columna = Integer.parseInt(datosTablero[i + 1]);
+                        //Validar que los datos ingresados esten dentro del rango del tablero
+                        if (fila < 0 || fila >= numeroFilas || columna < 0 || columna >= numeroColumnas) {
+                            mensajeError = "Existen posiciones fuera de rango en el texto en la posicion de los pares: "+i;
+                            esValido = false;
+                        }
+                        //Validar que la posicion no se haya usado ya por otro organismo
+                        else if(posicionesUsadas[fila][columna]){
+                            mensajeError = "La posición (" + fila + "," + columna + ") está repetida";
+                            esValido = false;
+                        }
+                        else{
+                            posicionesUsadas[fila][columna] = true;
+                        }
+                    }
+                }
             }
-            int fila = Integer.parseInt(datosTablero[i]);
-            int columna = Integer.parseInt(datosTablero[i + 1]);
-            //Validar que los datos ingresados esten dentro del rango del tablero
-            if (fila < 0 || fila >= numeroFilas || columna < 0 || columna >= numeroColumnas) {
-                mensajeError = "Existen posiciones fuera de rango en el string en la posicion de los pares: "+i;
-                return false;
-            }
-            //Validar que la posicion no se haya usado ya por otro organismo
-            if(posicionesUsadas[fila][columna]){
-                mensajeError = "La posición (" + fila + "," + columna + ") está repetida";
-                return false;
-            }
-            posicionesUsadas[fila][columna] = true;
         }
-        return true;
+        return esValido;
     }
 
-    // Valida que el string que se le pase como parametro sea un numero entero positivo
-    private boolean esEnteroPositivo(String s) {
-        if (s == null || s.isEmpty()) {
-            return false;
-        }
-        for (int i = 0; i < s.length(); i++){
-            if(!Character.isDigit(s.charAt(i))){
-                return false;
+    // Valida que el string que se le pase como parametro sea un numero entero
+    // no negativo (acepta el 0). Se limita a 9 digitos para que siempre quepa
+    // en un int y Integer.parseInt no lance NumberFormatException
+    private boolean esEnteroNoNegativo(String s) {
+        boolean esValido = true;
+        if (s == null || s.isEmpty() || s.length() > 9) {
+            esValido = false;
+        } else {
+            for (int i = 0; esValido && i < s.length(); i++){
+                if(!Character.isDigit(s.charAt(i))){
+                    esValido = false;
+                }
             }
         }
-        return true;
+        return esValido;
     }
 
     public String getMensajeError() {

@@ -142,6 +142,9 @@ public class Keyboard
         try {
             reader = null;
             current_token = null;
+            while (in.ready()) {
+                in.read(); // descarta cualquier caracter que ya este esperando en el buffer
+            }
             return in.readLine();
         }
         catch (Exception exception) {
@@ -327,4 +330,3 @@ public class Keyboard
     }
 
 } // end class
-

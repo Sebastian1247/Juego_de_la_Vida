@@ -5,7 +5,7 @@
  */
 public class App {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         int filas, columnas, generaciones;
 
         // El numero de filas y columnas se limita entre 2 y 20 segun lo
@@ -33,8 +33,9 @@ public class App {
             generaciones = Keyboard.readInt();
         }
         System.out.println();
-        
-        Tablero tablero = new Tablero(filas, columnas);
+
+        LectorPatronInicial lectorPatronInicial = new LectorPatronInicial();
+        Tablero tablero = new Tablero(filas, columnas, lectorPatronInicial);
 
         System.out.println("Ingrese el texto para generar el tablero y sus organismos vivos: ");
         System.out.println("Formato: cantidadOrganismos,fila1,columna1,fila2,columna2,... Ejemplo: 3,1,2,2,2,3,2");
