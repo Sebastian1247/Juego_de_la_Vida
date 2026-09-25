@@ -12,7 +12,7 @@ El programa pide el tamaño del tablero, el número de generaciones a simular y 
 
 El tablero no es circular: las celdas de los bordes no tienen vecinos "al otro lado".
 
-La simulación se detiene antes de llegar al número de generaciones pedido si ya no quedan organismos vivos, o si el tablero se estabiliza (dos generaciones seguidas iguales). Al terminar, se imprime el historial completo de movimientos (cambios de estado) de cada celda.
+La simulación se detiene antes de llegar al número de generaciones pedido si ya no quedan organismos vivos, o si el tablero se estabiliza (dos generaciones seguidas iguales). Al terminar, se imprime el historial completo de movimientos: el estado de cada celda en cada generación (estado anterior, vecinos vivos y resultado), haya cambiado o no.
 
 ## Cómo compilar y ejecutar
 
@@ -44,6 +44,15 @@ El programa pide, en orden:
 
    Coloca 3 organismos vivos en las posiciones (1,2), (2,2) y (3,2) — un patrón "blinker" que oscila entre vertical y horizontal en cada generación.
 
+   El patrón debe cumplir estas reglas; si no, el programa muestra el error y pide otro:
+
+   - Solo números separados por comas, sin espacios ni signos (`3,1,2,...`, no `3, 1, 2,...`).
+   - Al menos 1 organismo.
+   - La cantidad de organismos debe coincidir con el número de pares fila/columna escritos.
+   - Como máximo, la mitad de las celdas del tablero (por ejemplo, 12 en un tablero de 5x5).
+   - Cada fila y columna debe estar dentro del tablero.
+   - No se puede repetir una misma posición.
+
 Durante la simulación, se presiona Enter para avanzar a la siguiente generación.
 
 ## Estructura del proyecto
@@ -54,8 +63,8 @@ Durante la simulación, se presiona Enter para avanzar a la siguiente generació
 | `Tablero` | Guarda el estado de las celdas, calcula cada nueva generación y controla cuándo se detiene la simulación. |
 | `LectorPatronInicial` | Valida el string del patrón inicial y lo convierte en coordenadas utilizables. |
 | `EstadoOrganismo` | Enum con los dos estados posibles de una celda (`VIVO` / `MUERTO`) y su símbolo. |
-| `Movimiento` | Representa el cambio de estado de una celda en una generación específica. |
-| `HistorialMovimientos` | Guarda y muestra la lista de todos los movimientos ocurridos durante el juego. |
+| `Movimiento` | Registra el estado de una celda en una generación específica: estado anterior, vecinos vivos y resultado. |
+| `HistorialMovimientos` | Guarda y muestra la lista de todos los movimientos registrados durante el juego. |
 | `Keyboard` | Utilería para leer datos desde la consola. |
 
 ## Autores
